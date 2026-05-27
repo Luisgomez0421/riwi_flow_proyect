@@ -1,0 +1,343 @@
+<!doctype html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Riwiflow</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#e3e1ed",
+              tertiary: "#6b3000",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed-variant": "#5b00c5",
+              "on-tertiary-container": "#ffc19e",
+              "surface-container-low": "#f9f1ff",
+              secondary: "#5d5d67",
+              "on-secondary-container": "#64636d",
+              "inverse-on-surface": "#f6eefc",
+              "surface-dim": "#dfd7e5",
+              error: "#ba1a1a",
+              "secondary-fixed-dim": "#c7c5d1",
+              "on-primary-container": "#dac5ff",
+              "surface-variant": "#e8e0ee",
+              surface: "#fef7ff",
+              "inverse-primary": "#d3bbff",
+              "on-error": "#ffffff",
+              "surface-container-highest": "#e8e0ee",
+              "secondary-container": "#e3e1ed",
+              "on-primary-fixed": "#250059",
+              "on-secondary-fixed-variant": "#46464f",
+              "surface-container": "#f3ebf9",
+              "primary-container": "#6d28d9",
+              "outline-variant": "#ccc3d7",
+              "primary-fixed": "#ebddff",
+              "on-tertiary": "#ffffff",
+              "surface-container-high": "#ede5f3",
+              "surface-bright": "#fef7ff",
+              "primary-fixed-dim": "#d3bbff",
+              "on-primary": "#ffffff",
+              outline: "#7b7486",
+              "on-secondary": "#ffffff",
+              "on-tertiary-fixed-variant": "#743400",
+              background: "#fef7ff",
+              "tertiary-container": "#8f4200",
+              "on-secondary-fixed": "#1a1b23",
+              "error-container": "#ffdad6",
+              "on-background": "#1d1a24",
+              primary: "#5300b7",
+              "surface-tint": "#7331df",
+              "on-error-container": "#93000a",
+              "on-surface-variant": "#4a4455",
+              "tertiary-fixed-dim": "#ffb68b",
+              "on-surface": "#1d1a24",
+              "on-tertiary-fixed": "#321300",
+              "tertiary-fixed": "#ffdbc8",
+              "inverse-surface": "#332f39",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            spacing: {
+              md: "16px",
+              xxl: "48px",
+              xl: "32px",
+              xs: "4px",
+              sm: "8px",
+              gutter: "24px",
+              lg: "24px",
+            },
+            fontSize: {
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "label-sm": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+              "title-sm": ["18px", { lineHeight: "28px", fontWeight: "500" }],
+              "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+              "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "label-md": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: "Inter", sans-serif; }
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+        display: inline-block; vertical-align: middle; line-height: 1;
+      }
+      .input-focus-ring:focus {
+        outline: none; border-color: #5300b7; box-shadow: 0 0 0 2px #ebddff;
+      }
+      .kanban-column { min-width: 260px; }
+      .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #ccc3d7; border-radius: 10px; }
+      .task-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+      .task-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(83,0,183,0.1); }
+      #app { height: 100vh; }
+      .view { display: none; }
+      .view.active { display: flex; }
+      .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; }
+      .modal-backdrop.open { display: flex; }
+    </style>
+  </head>
+  <body class="bg-background text-on-background">
+    <div id="app">
+
+      <!-- ═══════════════════════════════════════════
+           VIEW: LOGIN
+      ════════════════════════════════════════════ -->
+      <div id="view-login" class="view active flex-col min-h-screen bg-surface-container-lowest">
+        <main class="flex-grow flex items-center justify-center px-gutter py-xxl">
+          <div class="w-full max-w-[440px] space-y-xl">
+            <div class="text-center space-y-md">
+              <h1 class="text-headline-md font-bold text-primary">Riwiflow</h1>
+              <p class="text-body-md text-on-surface-variant">Sign in to your professional workspace</p>
+            </div>
+            <div class="bg-surface-container-lowest border border-outline-variant p-xl rounded-xl space-y-lg">
+              <!-- Error message -->
+              <div id="login-error" class="hidden bg-error-container text-on-error-container text-body-sm px-md py-sm rounded-lg flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">error</span>
+                <span id="login-error-msg">Invalid credentials. Please try again.</span>
+              </div>
+              <div class="space-y-lg">
+                <div class="space-y-sm">
+                  <label class="text-label-md text-on-surface" for="email">Email address</label>
+                  <input class="w-full px-md py-md bg-white border border-outline-variant rounded-lg text-body-md text-on-surface input-focus-ring transition-all placeholder:text-outline"
+                    id="login-email" placeholder="name@company.com" type="email" />
+                </div>
+                <div class="space-y-sm">
+                  <label class="text-label-md text-on-surface" for="password">Password</label>
+                  <input class="w-full px-md py-md bg-white border border-outline-variant rounded-lg text-body-md text-on-surface input-focus-ring transition-all placeholder:text-outline"
+                    id="login-password" placeholder="••••••••" type="password" />
+                </div>
+                <div class="pt-sm">
+                  <button id="login-btn"
+                    class="w-full bg-primary hover:opacity-90 text-on-primary text-label-md py-md px-lg rounded-lg transition-all active:scale-[0.98] flex items-center justify-center gap-sm">
+                    Sign In
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+              <p class="text-body-sm text-on-surface-variant text-center">
+                Demo: <strong>admin@riwi.com</strong> / <strong>coder@riwi.com</strong> — password: <strong>123456</strong>
+              </p>
+            </div>
+          </div>
+        </main>
+        <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+          <div class="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary-fixed/20 blur-[120px] rounded-full"></div>
+          <div class="absolute bottom-[-10%] left-[-10%] w-[30%] h-[30%] bg-primary-fixed/10 blur-[100px] rounded-full"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════
+           VIEW: BOARD (Kanban)
+      ════════════════════════════════════════════ -->
+      <div id="view-board" class="view flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="hidden md:flex flex-col pt-md pb-xl gap-xs h-full bg-surface-container-low border-r border-outline-variant w-[260px] shrink-0">
+          <div class="px-gutter mb-xl">
+            <h1 class="text-headline-md font-bold text-primary">Riwiflow</h1>
+            <p class="text-body-sm text-on-surface-variant">Product Team</p>
+          </div>
+          <nav class="flex-1 space-y-1">
+            <a class="flex items-center bg-primary-fixed text-on-primary-fixed-variant rounded-lg mx-2 px-4 py-3 text-body-sm" href="#">
+              <span class="material-symbols-outlined mr-3">dashboard</span> Dashboard
+            </a>
+            <a class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 text-body-sm rounded-lg transition-all" href="#">
+              <span class="material-symbols-outlined mr-3">assignment</span> Projects
+            </a>
+            <a class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 text-body-sm rounded-lg transition-all" href="#">
+              <span class="material-symbols-outlined mr-3">group</span> Team
+            </a>
+            <a class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 text-body-sm rounded-lg transition-all" href="#">
+              <span class="material-symbols-outlined mr-3">bar_chart</span> Reports
+            </a>
+          </nav>
+          <!-- Role badge -->
+          <div class="px-4 space-y-3">
+            <div id="role-badge" class="flex items-center gap-2 px-3 py-2 bg-surface-container rounded-lg">
+              <span class="material-symbols-outlined text-primary text-[20px]">badge</span>
+              <div>
+                <p id="sidebar-name" class="text-label-md text-on-surface"></p>
+                <p id="sidebar-role" class="text-label-sm text-on-surface-variant uppercase"></p>
+              </div>
+            </div>
+            <!-- New Task btn — admin only -->
+            <button id="btn-new-task"
+              class="w-full bg-primary text-on-primary py-3 rounded-xl text-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+              <span class="material-symbols-outlined">add</span> New Task
+            </button>
+            <button id="btn-logout"
+              class="w-full border border-outline-variant text-on-surface-variant py-3 rounded-xl text-label-md flex items-center justify-center gap-2 hover:bg-surface-container transition-colors">
+              <span class="material-symbols-outlined">logout</span> Sign Out
+            </button>
+          </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-1 flex flex-col min-w-0">
+          <!-- Topbar -->
+          <header class="flex justify-between items-center h-16 px-gutter bg-surface border-b border-outline-variant z-40 shrink-0">
+            <div class="flex items-center gap-4 flex-1">
+              <div class="relative max-w-md w-full">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+                <input id="search-input"
+                  class="w-full pl-10 pr-4 py-2 bg-surface-container border border-outline-variant rounded-full text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  placeholder="Search tasks..." type="text" />
+              </div>
+            </div>
+            <div class="flex items-center gap-3 ml-4">
+              <span id="header-user" class="text-label-md text-on-surface-variant hidden md:block"></span>
+              <div id="header-avatar" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary text-label-sm font-bold"></div>
+            </div>
+          </header>
+
+          <!-- Kanban columns -->
+          <div class="flex-1 overflow-x-auto p-gutter custom-scrollbar">
+            <div class="flex gap-gutter h-full min-w-max">
+
+              <div class="kanban-column flex flex-col w-[260px] h-full">
+                <div class="flex items-center justify-between mb-md">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-outline"></span>
+                    <h3 class="text-title-sm text-on-surface">To Do</h3>
+                    <span id="count-todo" class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full text-label-sm">0</span>
+                  </div>
+                </div>
+                <div id="col-todo" class="flex-1 space-y-md p-2 bg-surface-container-low/50 rounded-xl overflow-y-auto custom-scrollbar"></div>
+              </div>
+
+              <div class="kanban-column flex flex-col w-[260px] h-full">
+                <div class="flex items-center justify-between mb-md">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-primary"></span>
+                    <h3 class="text-title-sm text-on-surface">In Progress</h3>
+                    <span id="count-inprogress" class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full text-label-sm">0</span>
+                  </div>
+                </div>
+                <div id="col-inprogress" class="flex-1 space-y-md p-2 bg-surface-container-low/50 rounded-xl overflow-y-auto custom-scrollbar"></div>
+              </div>
+
+              <div class="kanban-column flex flex-col w-[260px] h-full">
+                <div class="flex items-center justify-between mb-md">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                    <h3 class="text-title-sm text-on-surface">In Review</h3>
+                    <span id="count-inreview" class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full text-label-sm">0</span>
+                  </div>
+                </div>
+                <div id="col-inreview" class="flex-1 space-y-md p-2 bg-surface-container-low/50 rounded-xl overflow-y-auto custom-scrollbar"></div>
+              </div>
+
+              <div class="kanban-column flex flex-col w-[260px] h-full">
+                <div class="flex items-center justify-between mb-md">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                    <h3 class="text-title-sm text-on-surface">Done</h3>
+                    <span id="count-done" class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full text-label-sm">0</span>
+                  </div>
+                </div>
+                <div id="col-done" class="flex-1 space-y-md p-2 bg-surface-container-low/50 rounded-xl overflow-y-auto custom-scrollbar"></div>
+              </div>
+
+            </div>
+          </div>
+        </main>
+      </div>
+
+    </div><!-- #app -->
+
+    <!-- ═══════════════════════════════════════════
+         MODAL: Create / Edit Task
+    ════════════════════════════════════════════ -->
+    <div id="task-modal" class="modal-backdrop">
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-xl w-full max-w-md mx-4 p-xl space-y-lg">
+        <div class="flex items-center justify-between">
+          <h2 id="modal-title" class="text-headline-md font-bold text-on-surface">New Task</h2>
+          <button id="modal-close" class="material-symbols-outlined text-outline hover:text-on-surface transition-colors">close</button>
+        </div>
+
+        <div class="space-y-md">
+          <!-- Title — hidden for coder -->
+          <div id="field-title" class="space-y-sm">
+            <label class="text-label-md text-on-surface">Title</label>
+            <input id="task-title" type="text" placeholder="Task title"
+              class="w-full px-md py-md bg-white border border-outline-variant rounded-lg text-body-md input-focus-ring transition-all" />
+          </div>
+
+          <!-- Description -->
+          <div class="space-y-sm">
+            <label class="text-label-md text-on-surface">Description</label>
+            <textarea id="task-desc" rows="3" placeholder="Task description"
+              class="w-full px-md py-md bg-white border border-outline-variant rounded-lg text-body-md input-focus-ring transition-all resize-none"></textarea>
+          </div>
+
+          <!-- Status -->
+          <div class="space-y-sm">
+            <label class="text-label-md text-on-surface">Status</label>
+            <select id="task-status"
+              class="w-full px-md py-md bg-white border border-outline-variant rounded-lg text-body-md input-focus-ring transition-all">
+              <option value="todo">To Do</option>
+              <option value="inprogress">In Progress</option>
+              <option value="inreview">In Review</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+
+          <!-- Assigned user — admin only -->
+          <div id="field-user" class="space-y-sm">
+            <label class="text-label-md text-on-surface">Assigned To</label>
+            <select id="task-user"
+              class="w-full px-md py-md bg-white border border-outline-variant rounded-lg text-body-md input-focus-ring transition-all">
+            </select>
+          </div>
+        </div>
+
+        <div class="flex gap-md pt-sm">
+          <button id="modal-cancel"
+            class="flex-1 border border-outline-variant text-on-surface py-md rounded-lg text-label-md hover:bg-surface-container transition-colors">
+            Cancel
+          </button>
+          <button id="modal-save"
+            class="flex-1 bg-primary text-on-primary py-md rounded-lg text-label-md hover:opacity-90 transition-opacity">
+            Save Task
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

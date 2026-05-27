@@ -1,0 +1,55 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Admin User",
+      "email": "admin@riwi.com",
+      "password": "123456",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "name": "Coder User",
+      "email": "coder@riwi.com",
+      "password": "123456",
+      "role": "coder"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Create Login",
+      "description": "Build authentication page",
+      "status": "todo",
+      "userId": 2
+    },
+    {
+      "id": 2,
+      "title": "Setup API",
+      "description": "Configure json-server and REST endpoints",
+      "status": "inprogress",
+      "userId": 2
+    },
+    {
+      "id": 3,
+      "title": "Build Kanban Board",
+      "description": "Implement drag-and-drop task columns",
+      "status": "inreview",
+      "userId": 2
+    },
+    {
+      "id": 4,
+      "title": "Style Guide",
+      "description": "Define UI tokens and component library",
+      "status": "done",
+      "userId": 2
+    },
+    {
+      "title": "python proyecttt",
+      "description": "hacer una calculadora y ya",
+      "status": "inreview",
+      "userId": 2,
+      "id": 5
+    }
+  ]
+}
